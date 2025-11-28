@@ -1,200 +1,159 @@
-🛡️ Projeto: Auditoria de Segurança com Kali Linux, Medusa e Ambientes Vulneráveis
+#  Projeto: Auditoria de Segurança com Kali Linux, Medusa e Ambientes Vulneráveis
 
-Este repositório contém a implementação prática do desafio proposto pela DIO, abordando técnicas de ataques de força bruta, enumeração, testes de intrusão em serviços vulneráveis e boas práticas de documentação técnica para portfólio.
+Este repositório apresenta a implementação prática de um laboratório de segurança ofensiva utilizando **Kali Linux**, **Medusa**, **Metasploitable 2** e **DVWA**, com foco em simulações de ataques de força bruta em diferentes serviços (FTP, Web e SMB) dentro de um ambiente totalmente controlado.  
+O objetivo é compreender o funcionamento desses ataques, documentar os processos e construir um portfólio técnico profissional utilizando o GitHub.
 
-O foco do projeto é demonstrar o uso do Kali Linux, da ferramenta Medusa e de ambientes vulneráveis como Metasploitable2 e DVWA, simulando cenários reais de auditoria de segurança em um laboratório controlado.
+---
 
-📌 Sumário
+## 📘 Objetivo do Projeto
 
-📘 Objetivo do Projeto
+Este projeto permite ao estudante:
 
-🧪 Cenários Implementados
+- Entender ataques de força bruta em diversos protocolos;
+- Utilizar o Kali Linux e a ferramenta Medusa para auditoria de segurança;
+- Documentar processos técnicos de forma clara, objetiva e profissional;
+- Identificar vulnerabilidades e propor medidas de mitigação;
+- Utilizar o GitHub como portfólio técnico para exposição do trabalho.
 
-🧰 Ferramentas Utilizadas
+---
 
-🖥️ Configuração do Ambiente
+## 🧰 Ferramentas Utilizadas
 
-🚀 Testes e Ataques Simulados
+| Ferramenta | Finalidade |
+|------------|------------|
+| **Kali Linux** | Sistema operacional para testes de segurança |
+| **Metasploitable 2** | Máquina propositalmente vulnerável |
+| **DVWA** | Aplicação web vulnerável para treinamentos |
+| **Medusa** | Ferramenta de brute force multiprotocolo |
+| **Nmap** | Ferramenta de enumeração e varredura |
+| **enum4linux** | Coleta de informações SMB |
+| **smbclient** | Validação de credenciais SMB |
+| **VirtualBox** | Virtualização das máquinas do laboratório |
 
-1️⃣ Validação de Conectividade
+---
 
-2️⃣ Enumeração de Serviços com Nmap
+## 🖥️ Configuração do Ambiente
 
-3️⃣ Brute Force em FTP com Medusa
+Foi criado um ambiente virtual utilizando **VirtualBox**, com duas máquinas virtuais na rede:
 
-4️⃣ Automação de Login DVWA com Medusa
+Host-Only Adapter – 192.168.56.0/24
 
-5️⃣ Password Spraying em SMB
+- **Kali Linux** → máquina atacante  
+- **Metasploitable2** → máquina alvo  
+- **DVWA** → disponível via Apache na Metasploitable
 
-📝 Recomendações de Mitigação
+Todo o laboratório foi realizado em rede isolada, garantindo segurança e controle do ambiente.
 
-📂 Estrutura do Repositório
+---
 
-📎 Links de Documentação Oficial
+## 🚀 Testes e Ataques Realizados
 
-⬇️ Downloads Úteis
+### 1️⃣ Validação de Conectividade
 
-📚 Licença
-
-📘 Objetivo do Projeto
-
-Ao concluir o projeto, o estudante demonstra capacidade de:
-
-✔️ Entender ataques de força bruta (FTP, Web, SMB)
-✔️ Utilizar Kali Linux e Medusa em auditorias de segurança
-✔️ Documentar processos técnicos de forma clara e profissional
-✔️ Reconhecer vulnerabilidades e propor medidas de mitigação
-✔️ Versionar e publicar documentação no GitHub como portfólio técnico
-
-🧪 Cenários Implementados
-
-Os seguintes testes foram realizados:
-
-Ataque de força bruta em FTP
-
-Ataque automatizado em formulário de login DVWA
-
-Password spraying + enumeração de usuários em SMB
-
-Geração de wordlists simples
-
-Coleta de evidências de acesso
-
-Todos os testes foram executados em um laboratório isolado, com propósito exclusivamente educacional.
-
-🧰 Ferramentas Utilizadas
-Ferramenta	Finalidade
-Kali Linux	SO para testes de segurança
-Medusa	Brute force multiprotocolo
-Metasploitable2	Máquina vulnerável
-DVWA	Aplicação web vulnerável
-Nmap	Enumeração de portas e serviços
-enum4linux	Enumeração para SMB
-smbclient	Validação de acesso SMB
-VirtualBox	Virtualização do laboratório
-🖥️ Configuração do Ambiente
-
-As duas máquinas virtuais foram configuradas no VirtualBox utilizando rede:
-
-Host-Only Adapter (192.168.56.0/24)
-
-
-Kali Linux → Atacante
-
-Metasploitable2 → Alvo
-
-DVWA executado via Apache no Metasploitable
-
-🚀 Testes e Ataques Simulados
-1️⃣ Validação de Conectividade
+```bash
 ping <ip_host>
+```
+Verifica disponibilidade e latência do alvo via ICMP.
 
-
-Verifica latência e conectividade ICMP com o alvo.
-
-2️⃣ Enumeração de Serviços com Nmap
+### 2️⃣ Enumeração de Serviços com Nmap
+```bash
 nmap -sV -p 21,22,80,445,139 <ip_host>
+```
+```-sV``` → identifica versões dos serviços\
+Foco em portas vulneráveis: FTP, SSH, HTTP, SMB
 
+### 3️⃣ Ataque Brute Force em FTP com Medusa
 
--sV → identifica versões dos serviços
-
-Verificação focada em portas vulneráveis (FTP/SSH/HTTP/SMB)
-
-3️⃣ Brute Force em FTP com Medusa
-Wordlists utilizadas:
+Criação de wordlists simples:
+```bash
 echo -e "user\nmsfadmin\nadmin\nroot" > users.txt
 echo -e "123456\npassword\nqwerty\nmsfadmin" > pass.txt
-
+```
 Ataque:
+```bash
 medusa -h <ip_host> -U users.txt -P pass.txt -M ftp -t 6
+```
 
+### 4️⃣ Automação de Login Web (DVWA)
 
--M ftp → módulo FTP
-
--t 6 → threads paralelas
-
-4️⃣ Automação de Login DVWA com Medusa
-
-Acesso manual:
-
+Acesso manual ao login:
+```pearl
 http://<ip_host>/dvwa/login.php
+```
 
-
-Ataque HTTP:
-
+Ataque Medusa:
+```bash
 medusa -h <ip_host> -U users.txt -P pass.txt -M http \
  -m PAGE:'/dvwa/login.php' \
  -m FORM:'username=^USER^&password=^PASS^&Login=Login' \
  -m 'FAIL=Login failed' -t 6
+ ```
 
+ ### 5️⃣ Password Spraying + Enumeração SMB
 
-Simula login web com POST
-
-Detecta falha por string Login failed
-
-5️⃣ Password Spraying em SMB
-Enumeração:
+Enumeração com enum4linux:
+```bash
 enum4linux -a <ip_host> | tee enum4_output.txt
 less enum4_output.txt
+```
 
-Wordlists refinadas:
+Criação de wordlists SMB:
+```bash
 echo -e "user\nmsfadmin\nservice" > smb_users.txt
 echo -e "password\n123456\nWelcome123\nmsfadmin" > senhas_spray.txt
+```
 
 Ataque SMB:
+```bash
 medusa -h <ip_host> -U smb_users.txt -P senhas_spray.txt -M smbnt -t 2 -T 50
+```
 
-Validação após acesso:
+Validação de credenciais:
+```bash
 smbclient -L //<ip_host> -U msfadmin
+```
+---
+## 🔑 Wordlists Utilizadas e Referências
 
-📝 Recomendações de Mitigação
+As wordlists utilizadas neste laboratório são simples e foram geradas manualmente.
+Para wordlists profissionais e mais robustas:
 
-Implementar limitação de tentativas de login
+**SecLists (mais completa do mundo)**
+https://github.com/danielmiessler/SecLists
 
-Utilizar bloqueio automático por IP
+**RockYou.txt (clássica)**
+https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt
 
-Habilitar MFA em sistemas críticos
+**CrackStation Wordlists**
+https://crackstation.net/crackstation-wordlist-password-cracking-dictionary.htm
 
-Utilizar senhas fortes e políticas de complexidade
+---
+## 🔒 Medidas de Mitigação
 
-Desabilitar serviços desnecessários (ex.: FTP sem TLS)
+- Aplicação de políticas de complexidade de senha
+- Implementação de bloqueio por tentativas falhas
+- Uso de MFA em aplicações e serviços críticos
+- Desabilitar serviços não utilizados (como FTP sem TLS)
+- Utilizar protocolos seguros (SFTP / FTPS)
+- Monitoramento ativo via SIEM e logs centralizados
+---
+## 📎 Documentação Oficial
 
-Monitoramento contínuo via SIEM
+**Kali Linux:** https://www.kali.org/docs/   
+**Medusa:** http://foofus.net/goons/jmk/medusa/medusa.html   
+**DVWA:** https://github.com/digininja/DVWA      
+**Nmap:** https://nmap.org/book/man.html  
+**enum4linux-ng:** https://github.com/cddmp/enum4linux-ng
 
-📂 Estrutura do Repositório
-/
-├── README.md
-├── users.txt
-├── pass.txt
-├── smb_users.txt
-├── senhas_spray.txt
-├── enum4_output.txt
-└── /images   (opcional)
+---
+## ⬇️ Downloads Úteis
+| Software | Download |
+|-------  |------------|
+|Kali Linux|https://www.kali.org/get-kali/|
+|Metasploitable 2|https://sourceforge.net/projects/metasploitable/files/|
+|VirtualBox|https://www.virtualbox.org/wiki/Downloads|
+---
+## 📚 Licença
 
-📎 Links de Documentação Oficial
-
-Kali Linux – https://www.kali.org/docs/
-
-Medusa – http://foofus.net/goons/jmk/medusa/medusa.html
-
-DVWA – https://github.com/digininja/DVWA
-
-Nmap Manual – https://nmap.org/book/man.html
-
-enum4linux – https://github.com/cddmp/enum4linux-ng
-
-GitHub Docs – https://docs.github.com
-
-Markdown Guide – https://www.markdownguide.org/basic-syntax/
-
-⬇️ Downloads Úteis
-Ferramenta	Download
-Kali Linux	https://www.kali.org/get-kali/
-
-Metasploitable 2	https://sourceforge.net/projects/metasploitable/files/Metasploitable2/
-
-VirtualBox	https://www.virtualbox.org/wiki/Downloads
-📚 Licença
-
-Projeto desenvolvido para fins educacionais.
-Distribuído sob licença MIT.
+Este projeto é destinado exclusivamente para fins educacionais.
+Distribuído sob a licença MIT.
